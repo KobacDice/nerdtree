@@ -34,10 +34,13 @@ function! NERDTreeGrep()
     let &shellpipe='&>'
 
     try
-        " exec 'silent cd ' . dirnode.path.str()
-        " exec 'silent grep -rn ' . pattern . ' .'
-        exec 'silent vimgrep ' . pattern . '  ' . dirnode.path.str() . '\**\*'
-        " exec 'silent grep -rn ' . pattern . ' ' . dirnode.path.str()
+        if has('unix') || has('mac')
+            exec 'silent cd ' . dirnode.path.str()
+            exec 'silent grep -rn ' . pattern . ' .'
+            " exec 'silent grep -rn ' . pattern . ' ' . dirnode.path.str()
+        elseif has('win32') || has ('win64')
+            exec 'silent vimgrep ' . pattern . '  ' . dirnode.path.str() . '\**\*'
+        endif
     finally
         let &shellpipe = old_shellpipe
     endtry
